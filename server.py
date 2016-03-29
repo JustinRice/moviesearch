@@ -27,7 +27,6 @@ def makeConnection():
     
 @app.route('/')
 def mainIndex():
-  #  print 'in hello world'
     primaryresults = []
     secondaryresults = []
     rentype = 0
@@ -41,7 +40,6 @@ def search(searchTerm):
     rows = thissearch.execute(query)
     answer = []
     for row in rows:
-        print (row)
         answer.append(row)
     primaryresults = []
     for row in answer:
@@ -53,14 +51,11 @@ def search(searchTerm):
     query = "select actor from actor where movie= '" + searchTerm + "'"
     rows = thissearch.execute(query)
     for row in rows:
-        print (str(row.actor))
         primaryresults.append(str(row.actor))
-    
     emit('movieRes',primaryresults)
 
 @socketio.on('getCredits', namespace='/moviesearch')
 def getCredits(actorname):
-    print("Get credits " + str(actorname))
     cluster = Cluster(auth_provider=auth_provider)
     thissearch = cluster.connect('movie')
     query = "select movie from actor where actor = '" + actorname + "'"
@@ -69,7 +64,6 @@ def getCredits(actorname):
     answer.append(str(actorname))
     for row in rows:
         answer.append(str(row.movie))
-    print(answer)
     emit('addCred',answer)
     
 # start the server
